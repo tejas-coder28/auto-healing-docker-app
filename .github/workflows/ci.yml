@@ -56,6 +56,6 @@ jobs:
           context: "."
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/auto-healing-app:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/auto-healing-app:${{ github.sha }}
+            tejas2345/auto-healing-app:latest
+            tejas2345/auto-healing-app:${{ github.sha }}
 
