@@ -1,6 +1,15 @@
 # 🩺 Auto-Healing Docker Application
 
+![CI](https://github.com/tejas-coder28/auto-healing-docker-app/actions/workflows/ci.yml/badge.svg)
+
 A beginner-friendly DevOps project: a Flask app in Docker that **detects failures and recovers on its own**, with CI/CD via GitHub Actions.
+
+## Demo
+
+Screenshots coming soon
+
+1. **Crash Test**: Run `curl -X POST http://localhost:5000/crash` and observe Docker's `restart: unless-stopped` policy restart the container after the process exits.
+2. **Break Test**: Run `curl -X POST http://localhost:5000/break` to simulate an unhealthy app (HTTP 503), and watch the `autoheal` container detect consecutive health check failures and restart the app.
 
 ## Project structure
 
@@ -102,6 +111,21 @@ On every push, GitHub Actions: (1) installs dependencies and runs `pytest`, (2) 
 docker compose down
 ```
 
-## Ideas to extend
+## What I Learned
 
-Push the image to Docker Hub, add Prometheus metrics, deploy to a VPS.
+- **Docker Health Checks**: Configuring internal container health checks using `HEALTHCHECK` with custom `interval`, `timeout`, `retries`, and `start-period` parameters.
+- **Docker Restart Policies**: Understanding how policies like `unless-stopped` automatically recover containers when the main process exits or crashes.
+- **Why Autoheal is Needed**: Docker restart policies only react to process crashes/exits, not unhealthy application states; a sidecar like `willfarrell/autoheal` is necessary to monitor health status and trigger restarts.
+- **CI with GitHub Actions**: Automating local test suites (`pytest`), container image builds, and containerized smoke tests on every push and pull request.
+
+## Challenges
+
+- **Unhealthy vs. Exited Containers**: Native Docker restart policies ignore container health status, requiring an external monitor/watcher pattern to heal silently broken services.
+- **Health Check Timing**: Balancing `interval`, `timeout`, and `retries` to ensure quick failure recovery without false-positive restarts during momentary load spikes.
+
+## Future Improvements
+
+- **Docker Hub Push**: Automatically publish tagged and versioned container images to Docker Hub on successful CI runs.
+- **Prometheus & Grafana**: Export application metrics and build dashboards to monitor request rates, latencies, and restart occurrences.
+- **Cloud Deployment**: Deploy the Docker Compose stack to a cloud virtual machine or managed container platform (e.g., AWS EC2, GCP, or a VPS).
+- **Slack Alerts**: Trigger real-time notifications to a Slack channel when container crashes or autoheal restarts take place.
