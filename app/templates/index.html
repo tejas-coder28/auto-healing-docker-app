@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auto-Healing Docker App</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 3rem auto; padding: 0 1rem; }
+    .ok { color: #1a7f37; } .bad { color: #cf222e; }
+    code { background: #eee; padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>🩺 Auto-Healing Docker App</h1>
+  <p>Status: <strong class="{{ 'ok' if healthy else 'bad' }}">{{ 'Healthy' if healthy else 'Unhealthy' }}</strong></p>
+  <h3>Endpoints</h3>
+  <ul>
+    <li><code>GET /health</code> – health check</li>
+    <li><code>POST /break</code> – make the app report unhealthy</li>
+    <li><code>POST /crash</code> – kill the app process</li>
+  </ul>
+</body>
+</html>

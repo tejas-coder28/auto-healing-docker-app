@@ -1,0 +1,29 @@
+services:
+  web:
+    build: .
+    container_name: auto-healing-app
+    ports:
+      - "5000:5000"
+    # Restarts the container if the process crashes/exits
+    restart: unless-stopped
+    # Tells the autoheal service to watch this container
+    labels:
+      autoheal: "true"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=2)"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # Docker's restart policy does NOT restart "unhealthy" containers.
+  # This small helper does that for us.
+  autoheal:
+    image: willfarrell/autoheal:latest
+    container_name: autoheal
+    restart: always
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=autoheal
+      - AUTOHEAL_INTERVAL=5
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
