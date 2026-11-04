@@ -6,10 +6,23 @@ A beginner-friendly DevOps project: a Flask app in Docker that **detects failure
 
 ## Demo
 
-Screenshots coming soon
+**1. Container healthy**
+![Healthy container](docs/01-healthy.png)
 
-1. **Crash Test**: Run `curl -X POST http://localhost:5000/crash` and observe Docker's `restart: unless-stopped` policy restart the container after the process exits.
-2. **Break Test**: Run `curl -X POST http://localhost:5000/break` to simulate an unhealthy app (HTTP 503), and watch the `autoheal` container detect consecutive health check failures and restart the app.
+**2. Crash triggered, automatic recovery**
+![Crash recovery](docs/02-crash-recovery.png)
+
+**3. Unhealthy container restarted by autoheal**
+![Autoheal log](docs/03-autoheal-log.png)
+
+**4. CI/CD pipeline green**
+![GitHub Actions](docs/04-actions-green.png)
+
+1. `docker compose up --build -d`
+2. `docker ps` (wait until it shows healthy)
+3. `curl.exe -X POST http://localhost:5000/crash`, then `docker ps` (restart count goes up)
+4. `curl.exe -X POST http://localhost:5000/break`, then `curl.exe http://localhost:5000/health` (503, then 200 after 30-40 seconds)
+5. `docker logs autoheal`
 
 ## Project structure
 
