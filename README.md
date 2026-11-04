@@ -68,6 +68,12 @@ docker compose up --build -d
 
 Open http://localhost:5000
 
+## Run from Docker Hub
+
+```bash
+docker run -p 5000:5000 tejas2345/auto-healing-app:latest
+```
+
 ## Test the recovery
 
 ```bash
